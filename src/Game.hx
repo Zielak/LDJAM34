@@ -101,7 +101,7 @@ class Game extends State {
             size: new Vector(32,32),
             pos: new Vector(Main.width/2, Main.height/4*3),
             centered: true,
-            depth: 5.5,
+            depth: 5.7,
         });
         player.texture.filter_mag = nearest;
         player.texture.filter_min = nearest;
@@ -115,14 +115,14 @@ class Game extends State {
             {
                 "idle" : {
                     "frame_size":{ "x":"32", "y":"32" },
-                    "frameset": ["3,4"],
+                    "frameset": ["3-4"],
                     "pingpong":"false",
                     "loop": "true",
-                    "speed": "1"
+                    "speed": "4"
                 },
                 "chomp" : {
                     "frame_size":{ "x":"32", "y":"32" },
-                    "frameset": ["2,1,2"],
+                    "frameset": [2,1,2],
                     "pingpong":"false",
                     "loop": "false",
                     "speed": "6"
@@ -131,7 +131,7 @@ class Game extends State {
         ';
 
         anim_h.add_from_json( animation_json );
-        anim_h.animation = 'climb';
+        anim_h.animation = 'idle';
         anim_h.play();
 
 
@@ -141,28 +141,31 @@ class Game extends State {
             name: 'player_body',
             texture: Luxe.resources.texture('assets/body.gif'),
             size: new Vector(32,32),
-            pos: new Vector(0, 28),
+            pos: new Vector(16, 34),
             parent: player,
             centered: true,
             depth: 5.3,
         });
+        body.texture.filter_mag = nearest;
+        body.texture.filter_min = nearest;
+        body.fixed_rate = 1/30;
 
         var anim_b = new SpriteAnimation({ name:'anim' });
         body.add( anim_b );
 
-        var animation_json = '
+        var animation_json2 = '
             {
                 "climb" : {
                     "frame_size":{ "x":"32", "y":"32" },
                     "frameset": ["1-4"],
                     "pingpong":"false",
                     "loop": "true",
-                    "speed": "12"
+                    "speed": "8"
                 }
             }
         ';
 
-        anim_b.add_from_json( animation_json );
+        anim_b.add_from_json( animation_json2 );
         anim_b.animation = 'climb';
         anim_b.play();
 
@@ -174,11 +177,12 @@ class Game extends State {
                 x: 0, y: 0,
                 sides: 10,
                 solid: true,
-                r: 28,
+                r: 28/2,
                 color: new Color(1,1,1,1),
             }),
-            depth: 5.7,
-            scale: new Vector(0.1, 1),
+            pos: new Vector(16, 34),
+            depth: 5.5,
+            scale: new Vector(0.3, 1),
             parent: player,
         });
 
@@ -187,6 +191,17 @@ class Game extends State {
 
     function init_events()
     {
+
+    }
+
+
+
+
+
+    override function update(dt:Float)
+    {
+
+        // player.pos.x += 0.1;
 
     }
 
