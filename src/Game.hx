@@ -31,6 +31,7 @@ class Game extends State {
     var player:Sprite;
 
     var spawner:Spawner;
+    var hud:Hud;
 
     public function new()
     {
@@ -42,10 +43,11 @@ class Game extends State {
 
         
         Game.rnd = new Random(1);
-        Game.level = 1;
+        Game.level = 0;
         Game.time = 0;
+        Game.levelup_time = 0;
         Game.distance = 0;
-        Game.speed = 40;
+        Game.speed = 38;
     }
 
 
@@ -59,6 +61,7 @@ class Game extends State {
         init_events();
 
         spawner = new Spawner({name: 'spawner'});
+        hud = new Hud({name:'hud'});
 
 
         Luxe.timer.schedule(3, function(){
@@ -69,10 +72,16 @@ class Game extends State {
 
 
         Luxe.events.fire('game.init');
-
     }
 
 
+
+    override function onleave<T>(_:T) 
+    {
+        player.destroy();
+        spawner.destroy();
+        hud.destroy();
+    }
 
 
 
@@ -100,7 +109,7 @@ class Game extends State {
     {
         trace('levelup!');
         Game.level ++;
-        Game.levelup_time = 20;
+        Game.levelup_time = 10;
         Game.speed *= 1.2;
     }
 
@@ -126,10 +135,12 @@ class Game extends State {
         player.texture.filter_min = nearest;
         player.fixed_rate = 1/60;
 
-        player.add(new components.Collider({
+        var collider = new components.Collider({
             testAgainst: ['item', 'obstacle'],
             shape: luxe.collision.shapes.Polygon.rectangle(0, 0, 16, 16, true),
-        }));
+        });
+
+        player.add(collider);
 
 
         var anim_h = new SpriteAnimation({ name:'anim' });
@@ -205,6 +216,13 @@ class Game extends State {
                     "pingpong":"false",
                     "loop": "false",
                     "speed": "1"
+                },
+                "pop" : {
+                    "frame_size":{ "x":"32", "y":"32" },
+                    "frameset": ["6"],
+                    "pingpong":"false",
+                    "loop": "false",
+                    "speed": "1"
                 }
             }
         ';
@@ -251,6 +269,29 @@ class Game extends State {
             anim_b.animation = 'dead';
             anim_b.play();
         });
+        Luxe.events.listen('game.over.belly_pop', function(_){
+            anim_b.animation = 'pop';
+            anim_b.play();
+
+            // TODO, belly particles
+            var part:Visual;
+            var rnd_col:Float;
+            for(i in 0...60){
+                rnd_col = Math.random()*0.5 + 0.5;
+                part = new Visual({
+                    pos: player.pos.clone(),
+                    geometry: Luxe.draw.ngon({
+                        x: 0, y:0,
+                        sides: 8,
+                        solid: true,
+                        r: Math.random()*2+1
+                    }),
+                    color: new Color(1,rnd_col,rnd_col,0.8),
+                });
+                part.add(new components.Particle());
+                part.add(new components.DestroyOffScreen());
+            }
+        });
 
 
         player.events.listen('collider.hit', function(e:components.Collider.ColliderEvent)
@@ -269,14 +310,21 @@ class Game extends State {
 
         });
 
+        player.events.listen('jump.start', function(_){
+            collider.enabled = false;
+        });
+        player.events.listen('jump.stop', function(_){
+            collider.enabled = true;
+        });
+
     }
 
 
     function init_events()
     {
-        Luxe.events.listen('game.over.hunger', function(_){
+        // Luxe.events.listen('game.over.hunger', function(_){
 
-        });
+        // });
 
     }
 

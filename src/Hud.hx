@@ -28,10 +28,10 @@ class Hud extends Entity
     var camera:Camera;
 
     var level_txt:Text;
-    var leveltime_txt:Text;
+    var levelup_time_txt:Text;
     
 
-    var padding:Int = 10;
+    var padding:Int = 3;
     
     override public function init():Void
     {
@@ -58,8 +58,7 @@ class Hud extends Entity
             });
         }
 
-        setup_level();
-        setup_leveltime();
+        setup_text();
 
         initEvents();
 
@@ -68,7 +67,7 @@ class Hud extends Entity
     override function ondestroy()
     {
         level_txt.destroy();
-        leveltime_txt.destroy();
+        levelup_time_txt.destroy();
 
         // hud_batcher.destroy();
         // camera = null;
@@ -83,90 +82,39 @@ class Hud extends Entity
 
     }
 
-    function setup_level()
+    function setup_text()
     {
         level_txt = new Text({
-            bounds: new Rectangle(Game.width/2-90, top_padding+10, 90, 10),
+            bounds: new Rectangle(padding, padding, 90, 4),
             batcher: hud_batcher,
-            color: new Color().rgb(C.c4),
+            color: new Color(1,1,1,1),
+            point_size: 8,
+        });
+
+        levelup_time_txt = new Text({
+            bounds: new Rectangle(padding, padding + level_txt.bounds.y + level_txt.bounds.h, 90, 4),
+            batcher: hud_batcher,
+            color: new Color(1,1,1,1),
             point_size: 8,
         });
         
     }
-    function update_lovetext()
+
+
+    function update_text()
     {
-        distance_txt.text = 'distance: ${Math.round(Game.distance)}';
+        level_txt.text = 'level: ${Game.level}';
+        levelup_time_txt.text = 'time: ${Math.floor( Game.levelup_time )}';
     }
 
-    function setup_distancetxt()
-    {
-        distance_txt = new Text({
-            bounds: new Rectangle(Game.width/2 + 20, top_padding+10, 90 - 20, 10),
-            batcher: hud_batcher,
-            color: new Color().rgb(C.c4),
-            point_size: 8,
-        });
-    }
-    function update_distancetxt()
-    {
-        distance_txt.text = 'love: ${Math.round(Game.love)}';
-    }
 
     override function update(dt:Float):Void
     {
 
         if(Game.playing)
         {
-            if(hearth != null) choose_hearth_animation();
-
-            if(hope_bar_bg != null) update_hope_bar();
-            if(dist_bar_bg != null) update_distance_bar();
-
-            // update_lovetext();
-            // update_distancetxt();
+            update_text();
         }
     }
-
-
-    function choose_hearth_animation()
-    {
-        if( Game.hope > 0.8 && hearth_anim.animation != 'beat')
-        {
-            hearth_anim.animation = 'beat';
-            hearth_anim.play();
-        }
-        else if( (Game.hope > 0.6 && Game.hope <= 0.8) && hearth_anim.animation != 'beat_low')
-        {
-            hearth_anim.animation = 'beat_low';
-            hearth_anim.play();
-        }
-        else if( (Game.hope > 0.3 && Game.hope <= 0.6) && hearth_anim.animation != 'beat_medium')
-        {
-            hearth_anim.animation = 'beat_medium';
-            hearth_anim.play();
-        }
-        else if( Game.hope <= 0.3 && hearth_anim.animation != 'beat_hard')
-        {
-            hearth_anim.animation = 'beat_hard';
-            hearth_anim.play();
-        }
-    }
-
-    function update_hope_bar()
-    {
-        hope_bar_line.size.x = Math.round( hp_size * Maths.clamp(Game.hope, 0, 1) / 2 ) * 2;
-        hope_bar_line.uv.w = Math.round( hp_size * Maths.clamp(Game.hope, 0, 1) / 2 ) * 2;
-    }
-
-    function update_distance_bar()
-    {
-        dist_me.pos.x = Maths.lerp( Game.width/2 + dist_bar_bg.size.x/2 - 6, Game.width/2 - dist_bar_bg.size.x/2, Game.gal_distance );
-        dist_me.pos.x = Math.round( dist_me.pos.x );
-    }
-
-
-
-
-
 
 }

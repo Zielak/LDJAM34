@@ -28,6 +28,7 @@ class PlayerMovement extends Component
                 target_x = entity.pos.x - Game.rope_x;
                 velocity.x = -jump_speed;
                 velocity.y = -40;
+                entity.events.fire('jump.start');
             }
         });
 
@@ -37,6 +38,7 @@ class PlayerMovement extends Component
                 target_x = entity.pos.x + Game.rope_x;
                 velocity.x = jump_speed;
                 velocity.y = -40;
+                entity.events.fire('jump.start');
             }
         });
 
@@ -97,6 +99,8 @@ class PlayerMovement extends Component
 
     function stop_jumping()
     {
+        entity.events.fire('jump.stop');
+
         entity.pos.x = target_x;
 
         velocity.x = 0;

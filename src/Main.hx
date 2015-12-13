@@ -31,21 +31,21 @@ class Main extends luxe.Game {
 
     } //config
 
-    override public function onevent( event:SystemEvent ) {
+    // override public function onevent( event:SystemEvent ) {
 
-        if(event.window != null){
+    //     if(event.window != null){
 
-            if(event.window.type == focus_lost){
-                trace('focus_lost');
-                Game.playing = false;
-                // Luxe.snow.freeze = true;
-            }else if(event.window.type == focus_gained){
-                trace('focus_gained');
-                Game.playing = true;
-                // Luxe.snow.freeze = false;
-            }
-        }
-    }
+    //         if(event.window.type == focus_lost){
+    //             trace('focus_lost');
+    //             Game.playing = false;
+    //             // Luxe.snow.freeze = true;
+    //         }else if(event.window.type == focus_gained){
+    //             trace('focus_gained');
+    //             Game.playing = true;
+    //             // Luxe.snow.freeze = false;
+    //         }
+    //     }
+    // }
 
     override function ready() {
 

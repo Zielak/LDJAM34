@@ -21,12 +21,17 @@ class Belly extends Component{
         if(Game.playing){
             value -= hunger*rate;
 
-            if(value > 0){
-                update_belly();
+            if(value <= 0){
+                Game.game_over('hunger');
+            }
+            else if(value > 1.5)
+            {
+                Game.game_over('belly_pop');
+                entity.destroy();
             }
             else
             {
-                Game.game_over('hunger');
+                update_belly();
             }
 
             // time += rate;

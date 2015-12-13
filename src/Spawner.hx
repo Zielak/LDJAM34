@@ -40,7 +40,7 @@ class Spawner extends Entity
 
             if(time_ropes <= 0){
 
-                spawn_ropes();
+                spawn_ropes(-time_ropes);
 
                 choose = Game.rnd.float(0,1);
 
@@ -60,16 +60,13 @@ class Spawner extends Entity
     }
 
 
-    function spawn_ropes() {
+    function spawn_ropes(diff:Float) {
 
-        trace('spawn_ropes');
+        time_ropes = 32 + diff;
 
-        time_ropes = 32;
-
-
-        place_rope(0);
-        place_rope(1);
-        place_rope(2);
+        place_rope(0, -32 - diff);
+        place_rope(1, -32 - diff);
+        place_rope(2, -32 - diff);
     }
 
     function place_rope(row:Int, ?_y:Float = -32) {
