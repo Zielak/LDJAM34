@@ -3,12 +3,12 @@ import luxe.Color;
 import luxe.States;
 import luxe.Input;
 import luxe.utils.Random;
+import snow.types.Types.SystemEvent;
 
 class Main extends luxe.Game {
 
     var time:Float = 0;
 
-    static public inline var rope_x:Float = 150;
     static public inline var width:Float = 150;
     static public inline var height:Float = 150;
 
@@ -19,11 +19,33 @@ class Main extends luxe.Game {
 
         config.preload.textures.push({ id:'assets/body.gif' });
         config.preload.textures.push({ id:'assets/head.gif' });
+        
         config.preload.textures.push({ id:'assets/rope.gif' });
+
+        config.preload.textures.push({ id:'assets/items.gif' });
+
+        config.preload.textures.push({ id:'assets/branch.gif' });
+        config.preload.textures.push({ id:'assets/spike.gif' });
 
         return config;
 
     } //config
+
+    override public function onevent( event:SystemEvent ) {
+
+        if(event.window != null){
+
+            if(event.window.type == focus_lost){
+                trace('focus_lost');
+                Game.playing = false;
+                // Luxe.snow.freeze = true;
+            }else if(event.window.type == focus_gained){
+                trace('focus_gained');
+                Game.playing = true;
+                // Luxe.snow.freeze = false;
+            }
+        }
+    }
 
     override function ready() {
 
