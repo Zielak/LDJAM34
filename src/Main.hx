@@ -63,9 +63,8 @@ class Main extends luxe.Game {
         // Machines
         machine = new States({ name:'statemachine' });
 
-        // machine.add( new Intro() );
+        // machine.add( new State({name:'intro'}) );
         machine.add( new Game() );
-        // machine.add( new GameOver() );
         
         machine.set('game');
 
@@ -76,6 +75,9 @@ class Main extends luxe.Game {
 
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
+        }
+        if(e.keycode == Key.key_r) {
+            resetGame();
         }
 
     } //onkeyup
@@ -88,7 +90,11 @@ class Main extends luxe.Game {
 
     public function resetGame()
     {
+        machine.unset();
 
+        Luxe.timer.schedule(1, function(){
+            machine.set('game');
+        });
     }
 
 

@@ -4,7 +4,7 @@
     window: {
       width:600,
       height:600,
-      title:'luxe empty project',
+      title:'Hungry Spider',
       fullscreen:false,
       resizable:true,
       borderless:false
@@ -12,13 +12,13 @@
   },
 
   project : {
-    name : 'empty',
+    name : 'HungrySpider',
     version : '1.0.0',
-    author : 'luxeengine',
+    author : 'Darek Greenly',
 
     app : {
       name : 'luxe_empty',
-      package : 'com.luxeengine.empty'
+      package : 'com.darekgreenly.hungryspider'
     },
 
     build : {

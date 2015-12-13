@@ -12,7 +12,7 @@ class PlayerMovement extends Component
     var target_x:Float = 0;
     var target_y:Float = 0;
 
-    var jump_speed:Float = 70;
+    var jump_speed:Float = 50;
 
     var velocity:Vector;
 
@@ -26,7 +26,7 @@ class PlayerMovement extends Component
             if(!jumping && Game.playing){
                 jumping = true;
                 target_x = entity.pos.x - Game.rope_x;
-                velocity.x = -jump_speed;
+                velocity.x = -(jump_speed + Game.speed*0.4);
                 velocity.y = -40;
                 entity.events.fire('jump.start');
             }
@@ -36,14 +36,14 @@ class PlayerMovement extends Component
             if(!jumping && Game.playing){
                 jumping = true;
                 target_x = entity.pos.x + Game.rope_x;
-                velocity.x = jump_speed;
+                velocity.x = (jump_speed + Game.speed*0.4);
                 velocity.y = -40;
                 entity.events.fire('jump.start');
             }
         });
 
         Luxe.events.listen('game.over.*', function(_){
-            velocity.y = -60;
+            velocity.y = -90;
             velocity.x = 0;
             jumping = false;
             dying = true;

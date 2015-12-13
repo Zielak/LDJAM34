@@ -12,6 +12,7 @@ class Particle extends luxe.Component {
 
         velocity = new Vector(Math.random()*40+20,0);
         velocity.angle2D = Math.random()*Math.PI*2 ;
+        velocity.y -= 20;
     }
 
     override function init() {

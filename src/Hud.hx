@@ -29,6 +29,7 @@ class Hud extends Entity
 
     var level_txt:Text;
     var levelup_time_txt:Text;
+    var score_txt:Text;
     
 
     var padding:Int = 3;
@@ -68,6 +69,7 @@ class Hud extends Entity
     {
         level_txt.destroy();
         levelup_time_txt.destroy();
+        score_txt.destroy();
 
         // hud_batcher.destroy();
         // camera = null;
@@ -85,14 +87,21 @@ class Hud extends Entity
     function setup_text()
     {
         level_txt = new Text({
-            bounds: new Rectangle(padding, padding, 90, 4),
+            bounds: new Rectangle(padding, padding + Main.height/3, 90, 4),
             batcher: hud_batcher,
             color: new Color(1,1,1,1),
             point_size: 8,
         });
 
         levelup_time_txt = new Text({
-            bounds: new Rectangle(padding, padding + level_txt.bounds.y + level_txt.bounds.h, 90, 4),
+            bounds: new Rectangle(padding, padding*2 + level_txt.bounds.y + level_txt.bounds.h, 90, 4),
+            batcher: hud_batcher,
+            color: new Color(1,1,1,1),
+            point_size: 8,
+        });
+
+        score_txt = new Text({
+            bounds: new Rectangle(padding, padding*2 + levelup_time_txt.bounds.y + levelup_time_txt.bounds.h, 90, 4),
             batcher: hud_batcher,
             color: new Color(1,1,1,1),
             point_size: 8,
@@ -105,6 +114,7 @@ class Hud extends Entity
     {
         level_txt.text = 'level: ${Game.level}';
         levelup_time_txt.text = 'time: ${Math.floor( Game.levelup_time )}';
+        score_txt.text = 'SCORE:\n${Game.score}';
     }
 
 

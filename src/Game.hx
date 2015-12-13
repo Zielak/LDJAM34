@@ -1,9 +1,11 @@
 
 import luxe.collision.ShapeDrawerLuxe;
 import luxe.Color;
+import luxe.Rectangle;
 import luxe.Sprite;
 import luxe.States;
 import luxe.components.sprite.SpriteAnimation;
+import luxe.Text;
 import luxe.utils.Random;
 import luxe.Vector;
 import luxe.Visual;
@@ -22,6 +24,8 @@ class Game extends State {
     public static var distance:Float;
     public static var speed:Float;
     public static var difficulty:Float;
+    public static var score:Int;
+
 
     public static var playing:Bool = false;
     public static var gameover:Bool = false;
@@ -33,6 +37,8 @@ class Game extends State {
     var spawner:Spawner;
     var hud:Hud;
 
+    public static var gameover_text:Text;
+
     public function new()
     {
         super({ name:'game' });
@@ -42,7 +48,8 @@ class Game extends State {
         });
 
         
-        Game.rnd = new Random(1);
+        Game.rnd = new Random(Math.random());
+        Game.score = 0;
         Game.level = 0;
         Game.time = 0;
         Game.levelup_time = 0;
@@ -64,7 +71,7 @@ class Game extends State {
         hud = new Hud({name:'hud'});
 
 
-        Luxe.timer.schedule(3, function(){
+        Luxe.timer.schedule(2, function(){
             Game.playing = true;
             Luxe.events.fire('game.start');
             trace('Game.playing: '+Game.playing);
@@ -81,6 +88,9 @@ class Game extends State {
         player.destroy();
         spawner.destroy();
         hud.destroy();
+        if(Game.gameover_text != null) Game.gameover_text.destroy();
+
+        Luxe.scene.empty();
     }
 
 
@@ -88,9 +98,13 @@ class Game extends State {
 
     function reset()
     {
+        Game.score = 0;
+        Game.level = 0;
+        Game.levelup_time = 0;
         Game.difficulty = 0;
         Game.time = 0;
         Game.distance = 0;
+        Game.speed = 38;
 
         Game.playing = false;
         Game.gameover = false;
@@ -103,6 +117,30 @@ class Game extends State {
         Game.playing = false;
         Game.gameover = true;
         Luxe.events.fire('game.over.${reason}');
+
+        Game.gameover_text = new Text({
+            bounds: new Rectangle(10, Main.height/3, Main.width - 20, Main.height/3),
+            color: new Color(1,1,1,1),
+            point_size: 12,
+            align: center,
+            align_vertical: center,
+            depth: 20,
+        });
+
+        switch(reason){
+            case 'obstacle':
+                gameover_text.text = 'GAME OVER\nYou were attacked\nby SPIKES';
+            case 'hunger':
+                gameover_text.text = 'GAME OVER\nYou died of hunger';
+            case 'belly_pop':
+                gameover_text.text = 'GAME OVER\nYou ate TOO MUCH';
+            case 'no_rope':
+                gameover_text.text = 'GAME OVER\nStay on the ropes, silly';
+            default:
+                gameover_text.text = 'GAME OVER\nfor no reason...';
+        }
+
+        gameover_text.text += '\n\npress [R] to restart';
     }
 
     public static function levelup()
@@ -301,6 +339,7 @@ class Game extends State {
                 anim_h.play();
 
                 belly.events.fire('player.item.ate');
+                Game.score += 10;
 
                 e.other.destroy();
             }
